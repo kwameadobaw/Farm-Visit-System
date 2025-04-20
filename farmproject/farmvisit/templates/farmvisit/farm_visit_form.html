@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{% if edit_mode %}Edit{% else %}New{% endif %} Farm Visit</h1>
+
+<form method="post" enctype="multipart/form-data" class="card" id="farm-visit-form">
+    {% csrf_token %}
+    
+    <div class="section">
+        <h2>1. Farmer Details</h2>
+        <div class="form-row">
+            <label>Farmer Name: {{ form.farmer_name }}</label>
+            <label>Farm ID: {{ form.farm_id }}</label>
+        </div>
+        <div class="form-row">
+            <label>Phone Number: {{ form.phone_number }}</label>
+            <label>Village / Location: {{ form.location }}</label>
+        </div>
+        <div class="form-row">
+            <label>GPS Coordinates: {{ form.gps_coordinates }}</label>
+            <label>Farm Size (hectares): {{ form.farm_size }}</label>
+        </div>
+        <label>Farm Type:</label>
+        <div class="inline-checkbox">
+            {{ form.farm_type }}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>2. Visit Details</h2>
+        <div class="form-row">
+            <label>Date of Visit: 
+                <input type="date" name="visit_date" id="id_visit_date" class="datepicker" value="{{ form.visit_date.value|date:'Y-m-d'|default:'' }}" required>
+            </label>
+            <label>Visit Type: {{ form.visit_type }}</label>
+        </div>
+        <div class="form-row">
+            <label>Officer Name: {{ form.officer_name }}</label>
+            <label>Time Spent (hours): {{ form.time_spent }}</label>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. Observations</h2>
+        <div class="form-row">
+            <label>Main Crops: {{ form.main_crops }}</label>
+            <label>Crop Stage: {{ form.crop_stage }}</label>
+        </div>
+        <label>Crop Issues:</label>
+        <div class="inline-checkbox">
+            {{ form.crop_issues_list }}
+        </div>
+
+        <div class="form-row">
+            <label>Livestock Type: {{ form.livestock_type }}</label>
+            <label>Number of Animals: {{ form.animal_count }}</label>
+        </div>
+        <label>Livestock Issues:</label>
+        <div class="inline-checkbox">
+            {{ form.livestock_issues_list }}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>4. Recommendations</h2>
+        <label>Advice Given:</label>
+        {{ form.advice }}
+        <label>Upload Photos (you can select multiple):</label>
+        <input type="file" name="photos" id="id_photos" multiple accept="image/*">
+    </div>
+
+    <div class="section">
+        <h2>5. Follow-Up</h2>
+        <div class="inline-checkbox">
+            <label>{{ form.follow_up_needed }} Further Visit Needed</label>
+            <label>{{ form.training_needed }} Training Needed</label>
+            <label>{{ form.referral_needed }} Referral to Vet/Agronomist</label>
+        </div>
+        <label>Proposed Date: 
+            <input type="date" name="follow_up_date" id="id_follow_up_date" class="datepicker" value="{{ form.follow_up_date.value|date:'Y-m-d'|default:'' }}">
+        </label>
+        <label>Additional Notes:</label>
+        {{ form.follow_up_notes }}
+    </div>
+
+    <div class="section">
+        <button type="submit" id="submit-button">{% if edit_mode %}Update{% else %}Submit{% endif %} Visit</button>
+    </div>
+</form>
+
+<!-- Success Modal -->
+<div id="success-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">×</span>
+        <div class="modal-icon">✓</div>
+        <h2>Success!</h2>
+        <p>Farm visit has been recorded successfully.</p>
+        <button id="modal-ok-button">OK</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('farm-visit-form');
+        const modal = document.getElementById('success-modal');
+        const closeBtn = document.querySelector('.close');
+        const okButton = document.getElementById('modal-ok-button');
+        
+        // Close modal when clicking the × button
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+        
+        // Close modal when clicking the OK button
+        okButton.onclick = function() {
+            modal.style.display = "none";
+            // Redirect if needed
+            {% if user.is_authenticated %}
+            window.location.href = "{% url 'farm_visit_list' %}";
+            {% else %}
+            window.location.href = "{% url 'farm_visit_form' %}";
+            {% endif %}
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            // Regular form submission
+            // Don't prevent default - let the form submit normally
+            
+            // Show the modal immediately
+            modal.style.display = "block";
+            
+            // Return true to allow form submission
+            return true;
+        });
+    });
+</script>
+{% endblock %}

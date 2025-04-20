@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Farm Visit Details</h1>
+
+<div class="card">
+    <div class="section">
+        <h2>1. Farmer Details</h2>
+        <div class="form-row">
+            <p><strong>Farmer Name:</strong> {{ visit.farmer_name }}</p>
+            <p><strong>Farm ID:</strong> {{ visit.farm_id }}</p>
+        </div>
+        <div class="form-row">
+            <p><strong>Phone Number:</strong> {{ visit.phone_number }}</p>
+            <p><strong>Village / Location:</strong> {{ visit.location }}</p>
+        </div>
+        <div class="form-row">
+            <p><strong>GPS Coordinates:</strong> {{ visit.gps_coordinates }}</p>
+            <p><strong>Farm Size:</strong> {{ visit.farm_size }} hectares</p>
+        </div>
+        <p><strong>Farm Type:</strong> {{ visit.farm_type }}</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Visit Details</h2>
+        <div class="form-row">
+            <p><strong>Date of Visit:</strong> {{ visit.visit_date }}</p>
+            <p><strong>Visit Type:</strong> {{ visit.visit_type }}</p>
+        </div>
+        <div class="form-row">
+            <p><strong>Officer Name:</strong> {{ visit.officer_name }}</p>
+            <p><strong>Time Spent:</strong> {{ visit.time_spent }} hours</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3. Observations</h2>
+        {% if visit.main_crops %}
+        <div class="form-row">
+            <p><strong>Main Crops:</strong> {{ visit.main_crops }}</p>
+            <p><strong>Crop Stage:</strong> {{ visit.crop_stage }}</p>
+        </div>
+        <p><strong>Crop Issues:</strong> {{ visit.crop_issues|default:"None" }}</p>
+        {% endif %}
+        
+        {% if visit.livestock_type %}
+        <div class="form-row">
+            <p><strong>Livestock Type:</strong> {{ visit.livestock_type }}</p>
+            <p><strong>Number of Animals:</strong> {{ visit.animal_count }}</p>
+        </div>
+        <p><strong>Livestock Issues:</strong> {{ visit.livestock_issues|default:"None" }}</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>4. Recommendations</h2>
+        <p><strong>Advice Given:</strong></p>
+        <div class="advice-text">{{ visit.advice|linebreaks }}</div>
+        {% if visit.photos %}
+        <p><strong>Photos:</strong></p>
+        <div class="photo-container">
+            <img src="{{ visit.photos.url }}" alt="Farm photo" style="max-width: 100%; border-radius: 8px;">
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>5. Follow-Up</h2>
+        <div class="form-row">
+            <p><strong>Further Visit Needed:</strong> {% if visit.follow_up_needed %}Yes{% else %}No{% endif %}</p>
+            <p><strong>Training Needed:</strong> {% if visit.training_needed %}Yes{% else %}No{% endif %}</p>
+        </div>
+        <p><strong>Referral Needed:</strong> {% if visit.referral_needed %}Yes{% else %}No{% endif %}</p>
+        {% if visit.follow_up_needed %}
+        <p><strong>Proposed Date:</strong> {{ visit.follow_up_date }}</p>
+        {% endif %}
+        <p><strong>Additional Notes:</strong></p>
+        <div class="notes-text">{{ visit.follow_up_notes|linebreaks }}</div>
+    </div>
+
+    <div class="btn-group">
+        <a href="{% url 'farm_visit_edit' visit.pk %}">
+            <button>Edit Visit</button>
+        </a>
+        <a href="{% url 'farm_visit_list' %}">
+            <button class="btn-secondary">Back to List</button>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Farm Visits</h1>
+
+{% if visits %}
+<ul class="visit-list">
+    {% for visit in visits %}
+    <li class="visit-item">
+        <h3><a href="{% url 'farm_visit_detail' visit.pk %}">{{ visit.farmer_name }}'s Farm</a></h3>
+        <div class="visit-meta">
+            <span>Visit Date: {{ visit.visit_date }}</span>
+            <span>Farm Type: {{ visit.farm_type }}</span>
+            <span>Visit Type: {{ visit.visit_type }}</span>
+            <span>Officer: {{ visit.officer_name }}</span>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="card">
+    <p>No farm visits recorded yet.</p>
+</div>
+{% endif %}
+
+<div class="btn-group">
+    <a href="{% url 'farm_visit_form' %}">
+        <button>Add New Visit</button>
+    </a>
+</div>
+{% endblock %}
