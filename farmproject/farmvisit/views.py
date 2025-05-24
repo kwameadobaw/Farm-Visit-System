@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import FarmVisitForm
-from .models import FarmVisit
+from .models import FarmVisit, FarmPhoto
 from django.http import JsonResponse
 
 def farm_visit_form(request):
