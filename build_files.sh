@@ -7,4 +7,4 @@ chmod +x build_files.sh
 pip install -r requirements.txt
 
 # Collect static files
-python farmproject/manage.py collectstatic --noinput
+python manage.py collectstatic --noinput
